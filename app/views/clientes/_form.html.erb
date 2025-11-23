@@ -1,0 +1,62 @@
+<%= form_with model: cliente, url: form_url, local: true do |form| %>
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <%= form.label :nombre, "Nombre", class: "form-label" %>
+      <%= form.text_field :nombre,
+                          class: "form-control",
+                          placeholder: "Ingrese el nombre del cliente",
+                          required: true,
+                          pattern: "[A-Za-zÁÉÍÓÚáéíóúÑñ ]+",
+                          title: "Solo se permiten letras"
+      %>
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <%= form.label :tipo, "Tipo", class: "form-label" %>
+      <%= form.select :tipo,
+                      [["Particular", "Particular"], ["Empresa", "Empresa"]],
+                      { prompt: "Seleccione un tipo" },
+                      class: "form-select",
+                      required: true
+      %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <%= form.label :telefono, "Teléfono", class: "form-label" %>
+      <%= form.text_field :telefono,
+                          class: "form-control",
+                          placeholder: "Ingrese el teléfono",
+                          required: true,
+                          pattern: "\\d+",
+                          title: "Solo números permitidos"
+      %>
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <%= form.label :email, "Email", class: "form-label" %>
+      <%= form.email_field :email,
+                           class: "form-control",
+                           placeholder: "Ingrese el correo electrónico",
+                           required: true
+      %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12 mb-3">
+      <%= form.label :direccion, "Dirección", class: "form-label" %>
+      <%= form.text_area :direccion,
+                         class: "form-control",
+                         rows: 3,
+                         placeholder: "Ingrese la dirección del cliente"
+      %>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <%= form.submit "Guardar", class: "btn btn-primary" %>
+    <%= link_to "Cancelar", clientes_path, class: "btn btn-secondary ms-2" %>
+  </div>
+<% end %>

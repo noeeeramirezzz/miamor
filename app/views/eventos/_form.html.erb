@@ -1,0 +1,96 @@
+<%= form_with model: evento, url: form_url, local: true, id: "evento-form" do |form| %>
+
+    <div class="row">
+    <div class="col-md-6 mb-3">
+      <%= form.label :cliente_id, "Cliente", class: "form-label" %>
+      <%= form.collection_select :cliente_id, Cliente.all, :id, :nombre,
+                                 { include_blank: "Seleccione un cliente" },
+                                 class: "form-select",
+                                 required: true %>
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <%= form.label :nombre_evento, "Nombre del Evento", class: "form-label" %>
+      <%= form.text_field :nombre_evento,
+                          class: "form-control",
+                          placeholder: "Ingrese el nombre del evento",
+                          required: true,
+                          pattern: "[A-Za-zÁÉÍÓÚáéíóúÑñ0-9 ]+",
+                          title: "Solo se permiten letras, números y espacios" %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <%= form.label :tipo_evento, "Tipo de Evento", class: "form-label" %>
+      <%= form.select :tipo_evento,
+                      ["Infantil","Social", "Corporativo"],
+                      { include_blank: "Seleccione un tipo" },
+                      class: "form-select",
+                      required: true %>
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <%= form.label :estado, "Estado", class: "form-label" %>
+      <%= form.select :estado,
+                      ["Planificado", "Confirmado", "Cancelado"],
+                      { include_blank: "Seleccione un estado" },
+                      class: "form-select",
+                      required: true %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <%= form.label :fecha_inicio, "Fecha de Inicio", class: "form-label" %>
+      <%= form.datetime_local_field :fecha_inicio,
+                                    class: "form-control",
+                                    required: true %>
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <%= form.label :fecha_fin, "Fecha de Fin", class: "form-label" %>
+      <%= form.datetime_local_field :fecha_fin,
+                                    class: "form-control",
+                                    required: true %>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :lugar, "Lugar", class: "form-label" %>
+    <%= form.text_field :lugar,
+                        class: "form-control",
+                        placeholder: "Ingrese el lugar del evento",
+                        required: true,
+                        pattern: "[A-Za-zÁÉÍÓÚáéíóúÑñ0-9 ]+",
+                        title: "Solo se permiten letras, números y espacios" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.submit "Guardar", class: "btn btn-primary" %>
+    <%= link_to "Cancelar", eventos_path, class: "btn btn-secondary ms-2" %>
+  </div>
+<% end %>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("evento-form");
+        if (!form) return;
+
+        form.addEventListener("submit", function (event) {
+            const inicio = new Date(document.getElementById("evento_fecha_inicio").value);
+            const fin = new Date(document.getElementById("evento_fecha_fin").value);
+
+            if (!inicio || !fin) return;
+
+            // 1 hora en milisegundos
+            const unaHora = 60 * 60 * 1000;
+
+            if (fin - inicio < unaHora) {
+                event.preventDefault();
+                alert("El evento debe durar mínimo 1 hora.\nLa fecha de fin debe ser al menos 1 hora mayor que la fecha de inicio.");
+                return false;
+            }
+        });
+    });
+</script>

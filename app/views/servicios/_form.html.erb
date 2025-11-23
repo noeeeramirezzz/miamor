@@ -1,0 +1,62 @@
+<%= form_with model: servicio, url: form_url, local: true do |form| %>
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <%= form.label :nombre, "Nombre del Servicio", class: "form-label" %>
+      <%= form.text_field :nombre,
+                          class: "form-control",
+                          placeholder: "Ej: Decoración infantil",
+                          required: true,
+                          pattern: "[A-Za-zÁÉÍÓÚáéíóúÑñ ]+",
+                          title: "Solo se permiten letras"
+      %>
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <%= form.label :categoria, "Categoría", class: "form-label" %>
+      <%= form.select :categoria,
+                      ["Servicio de Atención", "Decoración", "Sonido", "Animación", "Fotografias", "Luces"],
+                      { include_blank: "Seleccione una categoría" },
+                      class: "form-select",
+                      required: true
+      %>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :descripcion, "Descripción", class: "form-label" %>
+    <%= form.text_area :descripcion,
+                       class: "form-control",
+                       rows: 4,
+                       placeholder: "Describa el servicio",
+                       required: true
+    %>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <%= form.label :costo_base, "Costo Base (₲)", class: "form-label" %>
+      <%= form.number_field :costo_base,
+                            step: "0.01",
+                            class: "form-control",
+                            placeholder: "Ingrese el costo base",
+                            required: true,
+                            min: 0,
+                            title: "Debe ingresar solo números"
+      %>
+    </div>
+
+    <div class="col-md-6 mb-3 d-flex align-items-center mt-4">
+      <div class="form-check">
+        <%= form.check_box :activo, class: "form-check-input",
+                           checked: servicio.activo.nil? ? true : servicio.activo %>
+        <%= form.label :activo, "Servicio activo", class: "form-check-label" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-3">
+    <%= form.submit "Guardar", class: "btn btn-primary" %>
+    <%= link_to "Cancelar", servicios_path, class: "btn btn-secondary ms-2" %>
+  </div>
+<% end %>
+

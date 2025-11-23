@@ -1,0 +1,106 @@
+<%= form_with model: empleado, url: form_url, local: true do |form| %>
+
+  <!-- FILA 1 -->
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <%= form.label :nombre, "Nombre Completo", class: "form-label" %>
+      <%= form.text_field :nombre, class: "form-control", placeholder: "Ingrese el nombre del Colaborador", required: true %>
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <%= form.label :cargo_id, "Puesto / Cargo", class: "form-label" %>
+      <%= form.collection_select :cargo_id, Cargo.all, :id, :nombre,
+                                 { prompt: "Seleccione un cargo" }, { class: "form-select" } %>
+    </div>
+  </div>
+
+  <!-- FILA 2 -->
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <%= form.label :telefono, "Teléfono", class: "form-label" %>
+      <%= form.text_field :telefono, class: "form-control", placeholder: "Ingrese el teléfono" %>
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <%= form.label :email, "Email", class: "form-label" %>
+      <%= form.email_field :email, class: "form-control", placeholder: "Ingrese el correo electrónico" %>
+    </div>
+  </div>
+
+  <!-- FILA 3 -->
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <%= form.label :salario, "Salario (₲)", class: "form-label" %>
+
+      <!-- Campo mostrado -->
+      <%= text_field_tag :salario_mostrado, "",
+                         class: "form-control",
+                         id: "salario_mostrado",
+                         placeholder: "Se completa automáticamente",
+                         readonly: true %>
+
+      <!-- Campo real -->
+      <%= form.hidden_field :salario, id: "empleado_salario" %>
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <%= form.label :fecha_contratacion, "Fecha de Contratación", class: "form-label" %>
+      <%= form.date_field :fecha_contratacion, class: "form-control" %>
+    </div>
+  </div>
+
+  <!-- CHECK ACTIVO -->
+  <div class="form-check mb-3">
+    <%= form.check_box :activo, class: "form-check-input", id: "empleado_activo" %>
+    <%= form.label :activo, "Empleado Activo", class: "form-check-label fw-semibold" %>
+  </div>
+
+  <!-- BOTONES -->
+  <div class="mb-3">
+    <%= form.submit "Guardar", class: "btn btn-primary" %>
+    <%= link_to "Cancelar", empleados_path, class: "btn btn-secondary ms-2" %>
+  </div>
+
+<% end %>
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const cargoSelect = document.querySelector("#empleado_cargo_id");
+
+        cargoSelect.addEventListener("change", async () => {
+            const salarioReal = document.querySelector("#empleado_salario");
+            const salarioMostrado = document.querySelector("#salario_mostrado");
+
+            if (!salarioReal || !salarioMostrado) return;
+
+            const cargoId = cargoSelect.value;
+
+            if (!cargoId) {
+                salarioReal.value = "";
+                salarioMostrado.value = "";
+                return;
+            }
+
+            try {
+                const response = await fetch(`/cargos/${cargoId}.json`);
+                const data = await response.json();
+
+                const valor = Number(data.salario);
+
+                salarioReal.value = valor;
+
+                salarioMostrado.value = valor.toLocaleString("es-PY", {
+                    style: "currency",
+                    currency: "PYG",
+                    minimumFractionDigits: 0
+                });
+
+            } catch (error) {
+                console.error(error);
+            }
+        });
+    });
+</script>
+
