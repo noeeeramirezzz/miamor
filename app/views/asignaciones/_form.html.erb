@@ -1,53 +1,35 @@
 <%= form_with model: asignacion, url: form_url, local: true do |form| %>
-
   <div class="row">
     <div class="col-md-6 mb-3">
       <%= form.label :evento_id, "Evento", class: "form-label" %>
-      <%= form.collection_select :evento_id, Evento.all, :id, :nombre_evento,
-                                 { include_blank: "Seleccione un evento" },
-                                 class: "form-select" %>
+      <%= form.collection_select :evento_id, Evento.all, :id, :nombre_evento, { prompt: "Seleccione un evento" }, class: "form-select" %>
     </div>
 
     <div class="col-md-6 mb-3">
-      <%= form.label :servicio_id, "Servicio", class: "form-label" %>
-      <%= form.collection_select :servicio_id, Servicio.all, :id, :nombre,
-                                 { include_blank: "Seleccione un servicio" },
-                                 class: "form-select", id: "select-servicio" %>
+      <%= form.label :empleado_id, "Empleado", class: "form-label" %>
+      <%= form.collection_select :empleado_id, Empleado.all, :id, :nombre, { prompt: "Seleccione un empleado" }, class: "form-select" %>
     </div>
   </div>
 
   <div class="row">
-    <div class="col-md-6 mb-3">
-      <%= form.label :empleado_id, "Empleado", class: "form-label" %>
-      <%= form.collection_select :empleado_id, Empleado.all, :id, :nombre,
-                                 { include_blank: "Seleccione un empleado" },
-                                 class: "form-select", id: "select-empleado" %>
-    </div>
-
     <div class="col-md-6 mb-3">
       <%= form.label :rol, "Rol", class: "form-label" %>
       <%= form.text_field :rol, class: "form-control", placeholder: "Ej: Coordinador" %>
     </div>
-  </div>
 
-  <div class="row">
     <div class="col-md-6 mb-3">
       <%= form.label :estado, "Estado", class: "form-label" %>
-      <%= form.select :estado, ["Planificada", "En Proceso", "Finalizada"],
-                      { include_blank: "Seleccione un estado" },
-                      class: "form-select" %>
+      <%= form.select :estado, ["Planificada", "En Proceso", "Finalizada"], { prompt: "Seleccione un estado" }, class: "form-select" %>
     </div>
   </div>
 
   <div class="mb-3">
     <%= form.label :tarea, "Tarea", class: "form-label" %>
-    <%= form.text_area :tarea, class: "form-control", rows: 3,
-                       placeholder: "Descripción de la tarea" %>
+    <%= form.text_area :tarea, class: "form-control", rows: 3, placeholder: "Descripción de la tarea" %>
   </div>
 
   <div class="mt-3">
     <%= form.submit "Guardar", class: "btn btn-primary" %>
     <%= link_to "Cancelar", asignaciones_path, class: "btn btn-secondary ms-2" %>
   </div>
-
 <% end %>
