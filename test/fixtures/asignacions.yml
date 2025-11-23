@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  evento: one
+  empleado: one
+  rol: MyString
+  tarea: MyString
+  estado: MyString
+  creado_en: 2025-10-25 00:46:20
+  actualizado_en: 2025-10-25 00:46:20
+
+two:
+  evento: two
+  empleado: two
+  rol: MyString
+  tarea: MyString
+  estado: MyString
+  creado_en: 2025-10-25 00:46:20
+  actualizado_en: 2025-10-25 00:46:20

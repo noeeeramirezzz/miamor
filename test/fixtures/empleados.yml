@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  nombre: MyString
+  puesto: MyString
+  telefono: MyString
+  email: MyString
+  activo: false
+  creado_en: 2025-10-25 00:45:54
+  actualizado_en: 2025-10-25 00:45:54
+
+two:
+  nombre: MyString
+  puesto: MyString
+  telefono: MyString
+  email: MyString
+  activo: false
+  creado_en: 2025-10-25 00:45:54
+  actualizado_en: 2025-10-25 00:45:54

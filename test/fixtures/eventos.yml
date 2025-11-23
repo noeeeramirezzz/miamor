@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  cliente: one
+  nombre_evento: MyString
+  tipo_evento: MyString
+  fecha_inicio: 2025-10-25 00:41:24
+  fecha_fin: 2025-10-25 00:41:24
+  lugar: MyString
+  estado: MyString
+  creado_en: 2025-10-25 00:41:24
+  actualizado_en: 2025-10-25 00:41:24
+
+two:
+  cliente: two
+  nombre_evento: MyString
+  tipo_evento: MyString
+  fecha_inicio: 2025-10-25 00:41:24
+  fecha_fin: 2025-10-25 00:41:24
+  lugar: MyString
+  estado: MyString
+  creado_en: 2025-10-25 00:41:24
+  actualizado_en: 2025-10-25 00:41:24

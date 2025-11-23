@@ -1,0 +1,67 @@
+<h1>Contratos</h1>
+
+<% if notice %>
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <%= notice %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+<% end %>
+
+<div class="d-flex justify-content-end mb-3">
+  <%= link_to "Nuevo Contrato", new_contrato_path, class: "btn btn-success" %>
+</div>
+
+<div class="table-responsive">
+  <%= form_with url: contratos_path, method: :get, local: true, class: "mb-3" do |f| %>
+    <div class="input-group">
+      <%= f.text_field :q, value: params[:q], class: "form-control", placeholder: "Buscar por evento o estado..." %>
+      <button class="btn btn-primary">Buscar</button>
+    </div>
+  <% end %>
+
+  <table class="table table-striped table-bordered align-middle">
+    <thead class="table-light">
+    <tr>
+      <th>#</th>
+      <th>N° Contrato</th>
+      <th>Evento</th>
+      <th>Fecha Contrato</th>
+      <th>Monto Total</th>
+      <th>Estado</th>
+      <th>Creado</th>
+      <th>Actualizado</th>
+      <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @contratos.each_with_index do |contrato, index| %>
+      <tr>
+        <td><%= index + 1 %></td>
+        <td><%= contrato.numero_contrato.presence || "-" %></td>
+        <td><%= contrato.evento&.nombre_evento || "Sin evento" %></td>
+        <td><%= contrato.fecha_contrato&.strftime("%d/%m/%Y") %></td>
+        <td>₲ <%= number_with_precision(contrato.monto_total, precision: 0, delimiter: '.') %></td>
+        <td><%= contrato.estado %></td>
+        <td><%= contrato.created_at&.strftime("%d/%m/%Y") %></td>
+        <td><%= contrato.updated_at&.strftime("%d/%m/%Y") %></td>
+        <td class="d-flex gap-1">
+          <%= link_to edit_contrato_path(contrato), class: "btn btn-sm btn-outline-primary", title: "Editar" do %>
+            <i class="bi bi-pencil"></i>
+          <% end %>
+          <%= button_to contrato_path(contrato), method: :delete, data: { confirm: "¿Está seguro?" }, class: "btn btn-sm btn-outline-danger", title: "Eliminar" do %>
+            <i class="bi bi-trash"></i>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+
+    <% if @contratos.empty? %>
+      <tr>
+        <td colspan="9" class="text-center">No hay contratos registrados.</td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+  <%= paginate @contratos %>
+
+</div>

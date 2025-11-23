@@ -1,0 +1,73 @@
+<h1>Servicios</h1>
+
+<% if notice %>
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <%= notice %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+<% end %>
+
+<div class="d-flex justify-content-end mb-3">
+  <%= link_to "Nuevo Servicio", new_servicio_path, class: "btn btn-success" %>
+</div>
+
+<div class="table-responsive">
+  <%= form_with url: servicios_path, method: :get, local: true, class: "mb-3" do |f| %>
+    <div class="input-group">
+      <%= f.text_field :q, value: params[:q], class: "form-control", placeholder: "Buscar por nombre, categoría o descripción..." %>
+      <button class="btn btn-primary">Buscar</button>
+    </div>
+  <% end %>
+
+  <table class="table table-striped table-bordered align-middle">
+    <thead class="table-light">
+    <tr>
+      <th>#</th>
+      <th>Nombre</th>
+      <th>Categoría</th>
+      <th>Descripción</th>
+      <th>Costo Base</th>
+      <th>Activo</th>
+      <th>Creado</th>
+      <th>Actualizado</th>
+      <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @servicios.each_with_index do |servicio, index| %>
+      <tr>
+        <td><%= index + 1 %></td>
+        <td class="text-capitalize"><%= servicio.nombre %></td>
+        <td><%= servicio.categoria %></td>
+        <td class="text-truncate" style="max-width: 250px;"><%= servicio.descripcion %></td>
+        <td>₲ <%= number_with_precision(servicio.costo_base, precision: 0, delimiter: ".") %></td>
+        <td>
+          <% if servicio.activo %>
+            <span class="badge bg-success">Activo</span>
+          <% else %>
+            <span class="badge bg-secondary">Inactivo</span>
+          <% end %>
+        </td>
+        <td><%= servicio.created_at&.strftime("%d/%m/%Y") %></td>
+        <td><%= servicio.updated_at&.strftime("%d/%m/%Y") %></td>
+        <td class="d-flex gap-1">
+          <%= link_to edit_servicio_path(servicio), class: "btn btn-sm btn-outline-primary", title: "Editar" do %>
+            <i class="bi bi-pencil"></i>
+          <% end %>
+          <%= button_to servicio_path(servicio), method: :delete, data: { confirm: "¿Está seguro?" }, class: "btn btn-sm btn-outline-danger", title: "Eliminar" do %>
+            <i class="bi bi-trash"></i>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+
+    <% if @servicios.empty? %>
+      <tr>
+        <td colspan="9" class="text-center">No hay servicios registrados.</td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+  <%= paginate @servicios %>
+
+</div>

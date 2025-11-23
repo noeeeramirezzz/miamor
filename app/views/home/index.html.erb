@@ -1,0 +1,39 @@
+<div class="hero-container">
+  <div class="hero-content text-center">
+    <div class="logo-container">
+      <%= image_tag "Antonella.png", alt: "Anto Eventos Logo", class: "img-fluid" %>
+    </div>
+
+    <h1 class="hero-title">Antonella Eventos</h1>
+    <p class="hero-subtitle">Organización integral de eventos sociales y corporativos</p>
+
+    <div class="hero-cards row justify-content-center mt-4">
+      <div class="col-md-3 col-10 mb-3">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <i class="bi bi-balloon-heart fs-1"></i>
+            <h5 class="card-title">Cumpleaños Infantiles</h5>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-10 mb-3">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <i class="bi bi-stars fs-1"></i>
+            <h5 class="card-title">Fiestas de 15 Años</h5>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-10 mb-3">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <i class="bi bi-briefcase fs-1"></i>
+            <h5 class="card-title">Eventos Corporativos</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%= link_to "Ver Eventos", eventos_path, class: "btn btn-primary mt-3" %>
+  </div>
+</div>

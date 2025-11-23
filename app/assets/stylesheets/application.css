@@ -1,0 +1,145 @@
+/* 🎀 GENERAL */
+body {
+    background-color: #ffe8f2 !important;
+    font-family: 'Poppins', sans-serif;
+    color: #6b4a52;
+    margin: 0;
+}
+
+/* 🖤 NAVBAR */
+.navbar {
+    background-color: #000 !important;
+    padding: 15px 20px;
+}
+
+.navbar .nav-link,
+.navbar-brand {
+    color: #e17fa0 !important; /* Dorado suave */
+    font-weight: 600;
+}
+
+.navbar .nav-link:hover {
+    color: #ffffff !important;
+    text-decoration: underline;
+}
+
+/* 👑 HERO FULL SCREEN – sin scroll */
+.hero-container {
+    min-height: calc(100vh - 120px); /* Ajustado para que todo entre */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 0 20px;
+    text-align: center;
+}
+
+.hero-content {
+    max-width: 1200px;
+    width: 100%;
+}
+
+/* 📌 Logo */
+.logo-container {
+    display: flex;
+    justify-content: center;
+}
+.logo-container img {
+    max-width: 260px;
+    margin-bottom: 5px; /* más cerca del título */
+}
+
+/* 🩷 Títulos */
+.hero-title,
+h1 {
+    font-size: 2.6rem;
+    font-weight: 700;
+    color: #c54c7d;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.hero-subtitle,
+.lead {
+    color: #8a6775;
+    font-size: 1.15rem;
+    margin-bottom: 25px;
+}
+
+/* 💖 Cards */
+.hero-cards {
+    display: flex;
+    justify-content: center;
+    gap: 22px;
+    margin: 10px 0 10px;
+    flex-wrap: nowrap;
+}
+
+.hero-cards .card,
+.card {
+    background: #ffffffd6;
+    border: none;
+    border-radius: 20px;
+    transition: 0.3s ease;
+    padding: 18px 16px;
+    width: 300px;
+    text-align: center;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+}
+
+/* ✨ Íconos Dorados */
+.card-body i {
+    display: block;
+    font-size: 38px;
+    margin-bottom: 12px;
+    color: #d4af37 !important;
+}
+
+/* 🎀 Títulos de tarjetas */
+.card-title {
+    color: #b23a68;
+    font-weight: 600;
+    font-size: 1.05rem;
+}
+
+/* 🌟 Botón */
+.btn-primary {
+    background-color: #d4af37 !important;
+    border-color: #d4af37 !important;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    padding: 12px 35px;
+    color: #000;
+    font-weight: bold;
+}
+
+.btn-primary:hover {
+    background-color: #b38b2c !important;
+    border-color: #b38b2c !important;
+    color: #fff;
+}
+
+/* 📱 Responsive móvil */
+@media (max-width: 768px) {
+    .hero-container {
+        min-height: auto; /* permite scroll en móvil */
+        padding-top: 100px;
+    }
+    .hero-cards {
+        flex-wrap: wrap;
+        gap: 14px;
+    }
+    .card {
+        width: 85%;
+    }
+
+    .pagination {
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+}

@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  contrato: one
+  servicio: one
+  cantidad: 1
+  precio_unitario: 9.99
+  subtotal: 9.99
+  notas: MyString
+  creado_en: 2025-10-25 00:43:08
+  actualizado_en: 2025-10-25 00:43:08
+
+two:
+  contrato: two
+  servicio: two
+  cantidad: 1
+  precio_unitario: 9.99
+  subtotal: 9.99
+  notas: MyString
+  creado_en: 2025-10-25 00:43:08
+  actualizado_en: 2025-10-25 00:43:08
