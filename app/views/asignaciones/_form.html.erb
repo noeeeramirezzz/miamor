@@ -2,7 +2,7 @@
 
   <div class="row">
     <div class="col-md-6 mb-3">
-      <%= form.label :evento_id, "Evento", class: "form-label" %>
+      <%= form.label :evento_id, "Eventooo", class: "form-label" %>
       <%= form.collection_select :evento_id, Evento.all, :id, :nombre_evento,
                                  { include_blank: "Seleccione un evento" },
                                  class: "form-select" %>
@@ -40,7 +40,7 @@
   </div>
 
   <div class="mb-3">
-    <%= form.label :tarea, "Tareaa", class: "form-label" %>
+    <%= form.label :tarea, "Tarea", class: "form-label" %>
     <%= form.text_area :tarea, class: "form-control", rows: 3,
                        placeholder: "Descripción de la tarea" %>
   </div>
