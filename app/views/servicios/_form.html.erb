@@ -2,13 +2,23 @@
   <div class="row">
     <div class="col-md-6 mb-3">
       <%= form.label :nombre, "Nombre del Servicio", class: "form-label" %>
-      <%= form.text_field :nombre,
-                          class: "form-control",
-                          placeholder: "Ej: Decoración infantil",
-                          required: true,
-                          pattern: "[A-Za-zÁÉÍÓÚáéíóúÑñ ]+",
-                          title: "Solo se permiten letras"
-      %>
+      <%= form.select :nombre,
+                      ["Decoración general del evento",
+                       "Decoración temática",
+                       "Centros de mesa",
+                       "Iluminación ambiental",
+                       "Dj set",
+                       "Sonido para ambiente",
+                       "Parlantes - consolas - monitores",
+                       "Fotografía del evento",
+                       "Atención en mesas",
+                       "Servicios de bebidas",
+                       "Anfitrión / Recepcionista",
+                       "Animador del evento",
+                       "Animador infantil"],
+                      { include_blank: "Seleccione un servicio" },
+                      class: "form-select servicio-nombre-select",
+                      required: true %>
     </div>
 
     <div class="col-md-6 mb-3">
@@ -16,9 +26,9 @@
       <%= form.select :categoria,
                       ["Servicio de Atención", "Decoración", "Sonido", "Animación", "Fotografias", "Luces"],
                       { include_blank: "Seleccione una categoría" },
-                      class: "form-select",
-                      required: true
-      %>
+                      class: "form-select categoria-select",
+                      required: true,
+                      disabled: true %>
     </div>
   </div>
 
@@ -28,8 +38,7 @@
                        class: "form-control",
                        rows: 4,
                        placeholder: "Describa el servicio",
-                       required: true
-    %>
+                       required: true %>
   </div>
 
   <div class="row">
@@ -40,9 +49,7 @@
                             class: "form-control",
                             placeholder: "Ingrese el costo base",
                             required: true,
-                            min: 0,
-                            title: "Debe ingresar solo números"
-      %>
+                            min: 0 %>
     </div>
 
     <div class="col-md-6 mb-3 d-flex align-items-center mt-4">
@@ -54,9 +61,87 @@
     </div>
   </div>
 
+  <div class="col-md-12 mb-3">
+    <h5 class="mt-3">Precios base por categoría</h5>
+
+    <table class="table table-bordered table-sm mt-2">
+      <thead class="table-light">
+      <tr>
+        <th>Categoría</th>
+        <th>Precio base (aprox.)</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>Decoración</td>
+        <td>₲ 300.000 – 1.500.000</td>
+      </tr>
+      <tr>
+        <td>Luces</td>
+        <td>₲ 250.000 – 800.000</td>
+      </tr>
+      <tr>
+        <td>Sonido</td>
+        <td>₲ 400.000 – 2.000.000</td>
+      </tr>
+      <tr>
+        <td>Fotografías</td>
+        <td>₲ 600.000 – 2.500.000</td>
+      </tr>
+      <tr>
+        <td>Animación</td>
+        <td>₲ 300.000 – 1.200.000</td>
+      </tr>
+      <tr>
+        <td>Servicio de Atención</td>
+        <td>₲ 50.000 – 120.000 por persona</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
   <div class="mt-3">
     <%= form.submit "Guardar", class: "btn btn-primary" %>
     <%= link_to "Cancelar", servicios_path, class: "btn btn-secondary ms-2" %>
   </div>
 <% end %>
 
+<script>
+    document.addEventListener("change", function (e) {
+        if (!e.target.classList.contains("servicio-nombre-select")) return;
+
+        const servicio = e.target.value;
+
+        const categorias = {
+            "Decoración general del evento": "Decoración",
+            "Decoración temática": "Decoración",
+            "Centros de mesa": "Decoración",
+
+            "Iluminación ambiental": "Luces",
+
+            "Dj set": "Sonido",
+            "Sonido para ambiente": "Sonido",
+            "Parlantes - consolas - monitores": "Sonido",
+
+            "Fotografía del evento": "Fotografias",
+
+            "Atención en mesas": "Servicio de Atención",
+            "Servicios de bebidas": "Servicio de Atención",
+            "Anfitrión / Recepcionista": "Servicio de Atención",
+
+            "Animador del evento": "Animación",
+            "Animador infantil": "Animación"
+        };
+
+        const categoriaSelect = document.querySelector(".categoria-select");
+
+        // Permitir cambiar internamente
+        categoriaSelect.disabled = false;
+
+        // Asignar valor
+        categoriaSelect.value = categorias[servicio] || "";
+
+        // Bloquearlo de nuevo
+        categoriaSelect.disabled = true;
+    });
+</script>

@@ -7,4 +7,4 @@ window.$ = window.jQuery = jQuery
 
 
 import "contratos"
-import "asignaciones";
+import "./asignaciones";

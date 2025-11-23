@@ -26,7 +26,7 @@ development:
   username: postgres
   password: root
   host: localhost
-  port: 5432
+  port: 5433
 
 
   # The specified database role being used to connect to PostgreSQL.
@@ -63,7 +63,7 @@ test:
   <<: *default
   database: gestion_eventos_test
   host: localhost
-  port: 5432
+  port: 5433
   username: postgres
   password: root
 
