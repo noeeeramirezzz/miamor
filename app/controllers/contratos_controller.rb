@@ -50,14 +50,10 @@ class ContratosController < ApplicationController
   # Eliminar contrato
   def destroy
     @contrato = Contrato.find(params[:id])
-
-    if @contrato.detalle_contratos.exists?
-      redirect_to contratos_path, alert: "No se puede eliminar: el contrato tiene detalles registrados."
-    else
-      @contrato.destroy
-      redirect_to contratos_path, notice: "Contrato eliminado correctamente."
-    end
+    @contrato.destroy
+    redirect_to contratos_path, notice: "Contrato eliminado correctamente."
   end
+
 
 
   private

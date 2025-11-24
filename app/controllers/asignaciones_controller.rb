@@ -18,20 +18,19 @@ class AsignacionesController < ApplicationController
   # Formulario nuevo
   def new
     @asignacion = Asignacion.new
-
-    # NECESARIO PARA QUE APAREZCA LA PRIMERA FILA EN LA TABLA
-    @asignacion.asignacion_detalles.build
+    @asignacion.asignacion_detalles.build   # primera fila
   end
 
   # Formulario editar
   def edit
     @asignacion = Asignacion.includes(:asignacion_detalles).find(params[:id])
-    @asignacion.asignacion_detalles.build if @asignacion.asignacion_detalles.empty?
   end
-
 
   # Crear asignación
   def create
+    puts "📌 PARAMS EN CREATE:"
+    pp params[:asignacion]    # SOLO PARA DEBUG
+
     @asignacion = Asignacion.new(asignacion_params)
 
     if @asignacion.save
@@ -43,6 +42,9 @@ class AsignacionesController < ApplicationController
 
   # Actualizar asignación
   def update
+    puts "📌 PARAMS EN UPDATE:"
+    pp params[:asignacion]    # SOLO PARA DEBUG
+
     @asignacion = Asignacion.find(params[:id])
 
     if @asignacion.update(asignacion_params)
@@ -64,15 +66,21 @@ class AsignacionesController < ApplicationController
     redirect_to asignaciones_path, notice: "Asignación eliminada exitosamente."
   end
 
-
-
   private
 
   def asignacion_params
     params.require(:asignacion).permit(
       :evento_id,
       :estado,
-      asignacion_detalles_attributes: [:id, :servicio_id, :empleado_id, :tarea, :_destroy]
+      asignacion_detalles_attributes: [
+        :id,
+        :servicio_id,
+        :empleado_id,
+        :rol,       # <-- AGREGADO
+        :precio,    # <-- AGREGADO
+        :tarea,     # <-- Si realmente lo usás
+        :_destroy
+      ]
     )
   end
 

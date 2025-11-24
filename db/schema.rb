@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_24_015300) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_24_165142) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -67,6 +67,8 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_24_015300) do
     t.datetime "fecha_contrato"
     t.decimal "monto_total", precision: 12, scale: 2
     t.string "numero_contrato"
+    t.text "observaciones_finales"
+    t.string "satisfaccion_cliente"
     t.datetime "updated_at", null: false
     t.index ["evento_id"], name: "index_contratos_on_evento_id"
   end

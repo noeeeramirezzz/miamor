@@ -1,14 +1,14 @@
 class AsignacionDetalle < ApplicationRecord
   self.table_name = "asignacion_detalles"
 
-  belongs_to :asignacion
+  belongs_to :asignacion, inverse_of: :asignacion_detalles
   belongs_to :servicio
-  belongs_to :empleado
+  belongs_to :empleado, optional: true
 
-  # 🔥 Cuando se crea una asignación → empleado queda inactivo
+  # Cuando se crea una asignación → empleado queda inactivo
   after_create :marcar_empleado_inactivo
 
-  # 🔥 Cuando se elimina una asignación → empleado vuelve activo
+  # Cuando se elimina → si ya no está en otras asignaciones, se reactiva
   after_destroy :marcar_empleado_activo
 
   private
@@ -21,10 +21,8 @@ class AsignacionDetalle < ApplicationRecord
   def marcar_empleado_activo
     return if empleado.nil?
 
-    # Si el empleado sigue asignado en otras filas, no se reactiva todavía
-    if empleado.asignacion_detalles.where.not(id: id).exists?
-      return
-    end
+    sigue_en_otro = empleado.asignacion_detalles.where.not(id: id).exists?
+    return if sigue_en_otro
 
     empleado.update(activo: true)
   end

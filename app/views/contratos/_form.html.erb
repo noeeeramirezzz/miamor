@@ -2,8 +2,8 @@
 
   <div class="row">
     <div class="col-md-6 mb-3">
-      <%= form.label :numero_contrato, "Número de Contratoo", class: "form-label" %>
-      <%= form.text_field :numero_contrato, class: "form-control", placeholder: "Ej: CN-2025-001" %>
+      <%= form.label :numero_contrato, "Número de Contrato", class: "form-label" %>
+      <%= form.text_field :numero_contrato, id: "contrato_numero_contrato", class: "form-control", placeholder: "Ej: 1025" %>
     </div>
 
     <div class="col-md-6 mb-3">
@@ -36,7 +36,29 @@
     <%= form.label :estado, "Estado", class: "form-label" %>
     <%= form.select :estado, ["Activo", "Cancelado", "Finalizado"],
                     { prompt: "Seleccione un estado" },
-                    class: "form-select" %>
+                    class: "form-select",
+                    id: "contrato_estado" %>
+  </div>
+
+  <!-- 🔥 CAMPOS QUE SE MOSTRARÁN SOLO SI EL CONTRATO ESTÁ FINALIZADO -->
+  <div id="cierre-contrato-fields" style="display:none">
+
+    <div class="mb-3">
+      <%= form.label :satisfaccion_cliente, "Satisfacción del cliente", class: "form-label" %>
+      <%= form.select :satisfaccion_cliente,
+                      ["Excelente", "Buena", "Regular", "Mala"],
+                      { include_blank: "Seleccione" },
+                      class: "form-select" %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :observaciones_finales, "Observaciones finales", class: "form-label" %>
+      <%= form.text_area :observaciones_finales,
+                         rows: 4,
+                         class: "form-control",
+                         placeholder: "Notas de cierre del evento / mejoras" %>
+    </div>
+
   </div>
 
   <h4>Detalle del Contrato</h4>
@@ -76,6 +98,22 @@
 
 <% end %>
 
+<!-- 🔥 Mostrar/ocultar campos de cierre -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const estadoSelect = document.getElementById("contrato_estado");
+        const cierreFields = document.getElementById("cierre-contrato-fields");
+
+        function toggleCierreFields() {
+            cierreFields.style.display =
+                estadoSelect.value === "Finalizado" ? "block" : "none";
+        }
+
+        estadoSelect.addEventListener("change", toggleCierreFields);
+        toggleCierreFields();
+    });
+</script>
+
 <!-- CARGAR FECHA AUTOMÁTICAMENTE SEGÚN EVENTO -->
 <script>
     document.addEventListener("DOMContentLoaded", () => {
@@ -107,7 +145,7 @@
     });
 </script>
 
-<!-- SISTEMA COMPLETO DE PRECIOS + SUBTOTALES + TOTAL + AGREGAR FILA -->
+<!-- SISTEMA COMPLETO DE PRECIOS -->
 <script>
     document.addEventListener("DOMContentLoaded", () => {
 
@@ -140,7 +178,6 @@
 
                     let cantidad = parseFloat(row.querySelector(".cantidad-input").value) || 1;
                     row.querySelector(".subtotal-input").value = parseInt(precio) * cantidad;
-
 
                     recalcularTotal();
                 };
@@ -181,6 +218,8 @@
         attachEvents();
     });
 </script>
+
+<!-- VALIDACIÓN FINAL -->
 <script>
     document.addEventListener("DOMContentLoaded", () => {
 
@@ -188,14 +227,12 @@
 
             const numero = document.getElementById("contrato_numero_contrato").value;
 
-            // VALIDAR QUE SOLO TENGA NÚMEROS
             if (!/^[0-9]+$/.test(numero)) {
                 e.preventDefault();
                 alert("El número de contrato solo puede contener números.");
                 return false;
             }
 
-            // VALIDAR QUE NO HAYA CAMPOS VACÍOS EN LOS DETALLES
             let valido = true;
 
             document.querySelectorAll("#detalle-container tr").forEach(row => {
@@ -210,7 +247,7 @@
 
             if (!valido) {
                 e.preventDefault();
-                alert("Debes completar todos los campos de cada servicio.\n(Notas puede quedar vacío)");
+                alert("Debes completar todos los campos de cada servicio.");
                 return false;
             }
         });

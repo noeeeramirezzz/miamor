@@ -1,22 +1,30 @@
 <tr class="nested-fields">
 
   <%= f.hidden_field :id %>
+  <%= f.hidden_field :_destroy %>
 
   <td>
-    <%= f.collection_select :servicio_id, Servicio.all,
-                            :id, :nombre,
+    <%= f.collection_select :servicio_id,
+                            Servicio.all,
+                            :id,
+                            :nombre,
                             { include_blank: "Seleccione" },
                             class: "form-select select-servicio" %>
   </td>
 
   <td>
-    <select class="form-select select-empleado" name="<%= f.object_name %>[empleado_id]">
-      <option value="">Seleccione empleado</option>
-    </select>
+    <%= f.collection_select :empleado_id,
+                            Empleado.where(id: f.object.empleado_id),
+                            :id,
+                            :nombre,
+                            { include_blank: "Seleccione empleado" },
+                            class: "form-select select-empleado",
+                            data: { selected: f.object.empleado_id } %>
   </td>
 
   <td>
-    <%= f.text_area :tarea, rows: 1,
+    <%= f.text_area :tarea,
+                    rows: 1,
                     class:"form-control",
                     placeholder:"Tarea asignada" %>
   </td>
@@ -26,45 +34,3 @@
   </td>
 
 </tr>
-
-<script>
-    document.addEventListener("change", async function (e) {
-
-        if (!e.target.classList.contains("select-servicio")) return;
-
-        const servicioId = e.target.value;
-        const fila = e.target.closest("tr");
-        const selectEmpleado = fila.querySelector(".select-empleado");
-
-        if (!servicioId) {
-            selectEmpleado.innerHTML = '<option value="">Seleccione empleado</option>';
-            return;
-        }
-
-        selectEmpleado.innerHTML = '<option>Cargando...</option>';
-
-        // 1️⃣ Traemos datos del servicio (categoria incluida)
-        const respServicio = await fetch(`/servicios/${servicioId}.json`);
-        const servicio = await respServicio.json();
-
-        const categoria = servicio.categoria;
-
-        if (!categoria) {
-            selectEmpleado.innerHTML = '<option value="">Sin empleados disponibles</option>';
-            return;
-        }
-
-        // 2️⃣ Traemos empleados por categoría
-        const respEmp = await fetch(`/empleados/por_categoria?categoria=${encodeURIComponent(categoria)}`);
-        const empleados = await respEmp.json();
-
-        // 3️⃣ Poblar select
-        selectEmpleado.innerHTML = '<option value="">Seleccione empleado</option>';
-
-        empleados.forEach(emp => {
-            selectEmpleado.innerHTML += `<option value="${emp.id}">${emp.nombre}</option>`;
-        });
-
-    });
-</script>
-
