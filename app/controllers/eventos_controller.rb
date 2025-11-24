@@ -50,9 +50,15 @@ class EventosController < ApplicationController
   # Eliminar
   def destroy
     @evento = Evento.find(params[:id])
-    @evento.destroy
-    redirect_to eventos_path, notice: 'Evento eliminado exitosamente.'
+
+    if @evento.contratos.exists? || @evento.asignaciones.exists?
+      redirect_to eventos_path, alert: "No se puede eliminar: el evento tiene contratos o asignaciones registradas."
+    else
+      @evento.destroy
+      redirect_to eventos_path, notice: "Evento eliminado correctamente."
+    end
   end
+
 
   # IMPORTANTE PARA JSON
   def show

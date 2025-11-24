@@ -28,7 +28,7 @@
                       { include_blank: "Seleccione una categoría" },
                       class: "form-select categoria-select",
                       required: true,
-                      disabled: true %>
+                      readonly: true %>
     </div>
   </div>
 
@@ -119,7 +119,7 @@
 
             "Iluminación ambiental": "Luces",
 
-            "Dj set": "Sonido",
+            "Dj Set": "Sonido",
             "Sonido para ambiente": "Sonido",
             "Parlantes - consolas - monitores": "Sonido",
 
@@ -135,14 +135,14 @@
 
         const categoriaSelect = document.querySelector(".categoria-select");
 
-        // Permitir cambiar internamente
-        categoriaSelect.disabled = false;
+        // Asegurar que el select sea editable por JS
+        categoriaSelect.removeAttribute("disabled");
+        categoriaSelect.removeAttribute("readonly");
 
-        // Asignar valor
+        // Asignar categoría correcta
         categoriaSelect.value = categorias[servicio] || "";
 
-        // Bloquearlo de nuevo
-        categoriaSelect.disabled = true;
+        // Bloquearlo pero permitiendo el envío del valor
+        categoriaSelect.setAttribute("readonly", true);
     });
 </script>
-

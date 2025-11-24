@@ -1,6 +1,14 @@
 class EmpleadosController < ApplicationController
   before_action :set_empleado, only: [:edit, :update, :destroy]
 
+  CATEGORIAS_A_CARGOS = {
+    "Decoración" => [1, 2, 3, 4],
+    "Luces" => [5],
+    "Sonido" => [6, 7, 8],
+    "Fotografias" => [9],
+    "Servicio de Atención" => [10, 11, 12],
+    "Animación" => [13, 14]
+  }
 
   def index
     @q = params[:q]
@@ -50,9 +58,28 @@ class EmpleadosController < ApplicationController
   end
 
   def destroy
-    @empleado.destroy
-    redirect_to empleados_path, notice: "Empleado eliminado exitosamente."
+    @empleado = Empleado.find(params[:id])
+
+    if @empleado.asignacion_detalles.exists?
+      redirect_to empleados_path, alert: "No se puede eliminar: el empleado tiene asignaciones registradas."
+    else
+      @empleado.destroy
+      redirect_to empleados_path, notice: "Empleado eliminado correctamente."
+    end
   end
+
+  # 💥 Acción definitiva — devuelve empleados según categoría del servicio
+  def por_categoria
+    categoria = params[:categoria]
+
+    cargos_ids = CATEGORIAS_A_CARGOS[categoria] || []
+
+    empleados = Empleado.where(cargo_id: cargos_ids)
+                        .where.not(activo: false)  # ⬅️ SOLO ocultamos inactivos
+
+    render json: empleados.select(:id, :nombre)
+  end
+
 
   private
 
@@ -61,6 +88,14 @@ class EmpleadosController < ApplicationController
   end
 
   def empleado_params
-    params.require(:empleado).permit(:nombre, :telefono, :email, :salario, :fecha_contratacion, :activo, :cargo_id)
+    params.require(:empleado).permit(
+      :nombre,
+      :telefono,
+      :email,
+      :salario,
+      :fecha_contratacion,
+      :activo,
+      :cargo_id
+    )
   end
 end

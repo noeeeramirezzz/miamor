@@ -1,0 +1,22 @@
+// app/javascript/controllers/asignaciones.js
+
+document.addEventListener("turbo:load", () => {
+
+    const btnAdd = document.getElementById("add-asignacion");
+    if (btnAdd) {
+        btnAdd.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            const template = document.getElementById("asignaciones_template").innerHTML;
+            document
+                .querySelector("#asignaciones-container")
+                .insertAdjacentHTML("beforeend", template);
+        });
+    }
+
+    document.addEventListener("click", (e) => {
+        if (e.target.classList.contains("remove_fields")) {
+            e.target.closest(".nested-fields")?.remove();
+        }
+    });
+});

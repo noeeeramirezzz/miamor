@@ -25,11 +25,10 @@ class AsignacionesController < ApplicationController
 
   # Formulario editar
   def edit
-    @asignacion = Asignacion.find(params[:id])
-
-    # Si no tiene filas, mostrar una igual
+    @asignacion = Asignacion.includes(:asignacion_detalles).find(params[:id])
     @asignacion.asignacion_detalles.build if @asignacion.asignacion_detalles.empty?
   end
+
 
   # Crear asignación
   def create
@@ -55,10 +54,17 @@ class AsignacionesController < ApplicationController
 
   # Eliminar asignación
   def destroy
-    @asignacion = Asignacion.find(params[:id])
+    @asignacion = Asignacion.find_by(id: params[:id])
+
+    unless @asignacion
+      return redirect_to asignaciones_path, alert: "La asignación ya no existe o ya fue eliminada."
+    end
+
     @asignacion.destroy
     redirect_to asignaciones_path, notice: "Asignación eliminada exitosamente."
   end
+
+
 
   private
 

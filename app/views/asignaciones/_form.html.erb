@@ -30,13 +30,11 @@
     </thead>
 
     <tbody id="asignaciones-container">
-    <% @asignacion.asignacion_detalles.each do |detalle_item| %>
-      <%= form.fields_for :asignacion_detalles, detalle_item do |detalle| %>
-        <%= render "asignacion_fields", f: detalle %>
-      <% end %>
+    <!-- RENDERIZAR TODOS LOS DETALLES EXISTENTES -->
+    <%= form.fields_for :asignacion_detalles do |detalle| %>
+      <%= render "asignacion_fields", f: detalle %>
     <% end %>
     </tbody>
-
   </table>
 
   <%= link_to "Agregar servicio", "#", id: "add-asignacion", class: "btn btn-success" %>
@@ -56,17 +54,57 @@
 <% end %>
 
 <script>
+    // ➕ Agregar nuevas filas
     document.addEventListener("click", function(e) {
-        // Agregar nuevas filas
         if (e.target.id === "add-asignacion") {
             e.preventDefault();
             const template = document.querySelector("#asignaciones_template").innerHTML;
-            document.querySelector("#asignaciones-container").insertAdjacentHTML("beforeend", template);
+            document.querySelector("#asignaciones-container")
+                .insertAdjacentHTML("beforeend", template);
         }
 
-        // Eliminar filas
+        // ❌ Eliminar filas
         if (e.target.classList.contains("remove_fields")) {
             e.target.closest(".nested-fields").remove();
+        }
+    });
+
+    // 🎯 Filtrar empleados según servicio (para cada fila)
+    document.addEventListener("change", function(e) {
+        if (e.target.classList.contains("select-servicio")) {
+
+            const servicioSelect = e.target;
+            const row = servicioSelect.closest("tr");
+            const empleadoSelect = row.querySelector(".select-empleado");
+
+            const servicioId = servicioSelect.value;
+
+            if (!servicioId) {
+                empleadoSelect.innerHTML = '<option value="">Seleccione empleado</option>';
+                return;
+            }
+
+            // 1) Obtener el servicio para saber su categoría
+            fetch(`/servicios/${servicioId}.json`)
+                .then(resp => resp.json())
+                .then(servicio => {
+                    const categoria = servicio.categoria;
+
+                    // 2) Pedir empleados por categoría (string)
+                    fetch(`/empleados/por_categoria?categoria=${encodeURIComponent(categoria)}`)
+                        .then(resp => resp.json())
+                        .then(data => {
+                            empleadoSelect.innerHTML =
+                                '<option value="">Seleccione empleado</option>';
+
+                            data.forEach(emp => {
+                                const opt = document.createElement("option");
+                                opt.value = emp.id;
+                                opt.text = emp.nombre;
+                                empleadoSelect.appendChild(opt);
+                            });
+                        });
+                });
         }
     });
 </script>

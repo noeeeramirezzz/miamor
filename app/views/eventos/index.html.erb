@@ -1,10 +1,4 @@
 <h1>Eventos</h1>
-<% if notice %>
-  <div class="alert alert-success alert-dismissible fade show" role="alert">
-    <%= notice %>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-  </div>
-<% end %>
 
 <div class="mb-3 d-flex justify-content-end">
   <%= link_to "Crear Nuevo Evento", new_evento_path, class: "btn btn-success" %>
@@ -32,6 +26,7 @@
       <th>Acciones</th>
     </tr>
     </thead>
+
     <tbody>
     <% @eventos.each_with_index do |evento, index| %>
       <tr>
@@ -43,16 +38,23 @@
         <td><%= evento.fecha_fin&.strftime("%d/%m/%Y %H:%M") %></td>
         <td><%= evento.lugar %></td>
         <td><%= evento.estado %></td>
+
         <td class="d-flex gap-1">
           <%= link_to edit_evento_path(evento), class: "btn btn-sm btn-outline-primary", title: "Editar evento" do %>
             <i class="bi bi-pencil"></i>
           <% end %>
-          <%= button_to evento_path(evento), method: :delete, data: { confirm: "¿Está seguro?" }, class: "btn btn-sm btn-outline-danger", title: "Eliminar evento" do %>
+
+          <%= button_to evento_path(evento),
+                        method: :delete,
+                        data: { confirm: "¿Está seguro?" },
+                        class: "btn btn-sm btn-outline-danger",
+                        title: "Eliminar evento" do %>
             <i class="bi bi-trash"></i>
           <% end %>
         </td>
       </tr>
     <% end %>
+
     <% if @eventos.empty? %>
       <tr>
         <td colspan="9" class="text-center">No hay eventos registrados.</td>
@@ -60,5 +62,6 @@
     <% end %>
     </tbody>
   </table>
+
   <%= paginate @eventos %>
 </div>

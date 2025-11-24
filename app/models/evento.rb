@@ -1,9 +1,16 @@
 class Evento < ApplicationRecord
-  self.table_name = "eventos"   # ← AGREGA ESTO
+  self.table_name = "eventos"
 
   belongs_to :cliente
   validate :duracion_minima
-  has_many :asignaciones, dependent: :destroy
+
+  has_many :contratos, dependent: :restrict_with_error
+
+  has_many :asignaciones,
+           class_name: "Asignacion",
+           foreign_key: "evento_id",
+           dependent: :restrict_with_error
+
   accepts_nested_attributes_for :asignaciones, allow_destroy: true
 
   def duracion_minima

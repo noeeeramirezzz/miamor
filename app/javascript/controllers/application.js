@@ -1,9 +1,8 @@
-import { Application } from "@hotwired/stimulus"
+import "@hotwired/turbo-rails"
+import "controllers"
 
-const application = Application.start()
+import "jquery"
+window.$ = window.jQuery = jQuery
 
-// Configure Stimulus development experience
-application.debug = false
-window.Stimulus   = application
-
-export { application }
+import "contratos"
+import "asignaciones"

@@ -1,12 +1,5 @@
 <h1>Servicios</h1>
 
-<% if notice %>
-  <div class="alert alert-success alert-dismissible fade show" role="alert">
-    <%= notice %>
-    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-  </div>
-<% end %>
-
 <div class="d-flex justify-content-end mb-3">
   <%= link_to "Nuevo Servicio", new_servicio_path, class: "btn btn-success" %>
 </div>
@@ -33,6 +26,7 @@
       <th>Acciones</th>
     </tr>
     </thead>
+
     <tbody>
     <% @servicios.each_with_index do |servicio, index| %>
       <tr>
@@ -41,6 +35,7 @@
         <td><%= servicio.categoria %></td>
         <td class="text-truncate" style="max-width: 250px;"><%= servicio.descripcion %></td>
         <td>₲ <%= number_with_precision(servicio.costo_base, precision: 0, delimiter: ".") %></td>
+
         <td>
           <% if servicio.activo %>
             <span class="badge bg-success">Activo</span>
@@ -48,13 +43,19 @@
             <span class="badge bg-secondary">Inactivo</span>
           <% end %>
         </td>
+
         <td><%= servicio.created_at&.strftime("%d/%m/%Y") %></td>
         <td><%= servicio.updated_at&.strftime("%d/%m/%Y") %></td>
+
         <td class="d-flex gap-1">
           <%= link_to edit_servicio_path(servicio), class: "btn btn-sm btn-outline-primary", title: "Editar" do %>
             <i class="bi bi-pencil"></i>
           <% end %>
-          <%= button_to servicio_path(servicio), method: :delete, data: { confirm: "¿Está seguro?" }, class: "btn btn-sm btn-outline-danger", title: "Eliminar" do %>
+
+          <%= button_to servicio_path(servicio), method: :delete,
+                        data: { confirm: "¿Está seguro?" },
+                        class: "btn btn-sm btn-outline-danger",
+                        title: "Eliminar" do %>
             <i class="bi bi-trash"></i>
           <% end %>
         </td>
@@ -68,6 +69,6 @@
     <% end %>
     </tbody>
   </table>
-  <%= paginate @servicios %>
 
+  <%= paginate @servicios %>
 </div>

@@ -46,9 +46,15 @@ class ClientesController < ApplicationController
   # Eliminar cliente
   def destroy
     @cliente = Cliente.find(params[:id])
-    @cliente.destroy
-    redirect_to clientes_path, notice: 'Cliente eliminado exitosamente.'
+
+    if @cliente.eventos.exists?
+      redirect_to clientes_path, alert: "No se puede eliminar: el cliente tiene eventos registrados."
+    else
+      @cliente.destroy
+      redirect_to clientes_path, notice: "Cliente eliminado correctamente."
+    end
   end
+
 
   private
 
