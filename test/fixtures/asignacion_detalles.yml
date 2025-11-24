@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  asignacion: one
+  servicio: one
+  empleado: one
+  rol: MyString
+  tarea: MyText
+  estado: MyString
+
+two:
+  asignacion: two
+  servicio: two
+  empleado: two
+  rol: MyString
+  tarea: MyText
+  estado: MyString
