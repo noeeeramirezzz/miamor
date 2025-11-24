@@ -4,13 +4,14 @@
   <div class="row">
     <div class="col-md-6 mb-3">
       <%= form.label :nombre, "Nombre Completo", class: "form-label" %>
-      <%= form.text_field :nombre, class: "form-control", placeholder: "Ingrese el nombre del Colaborador", required: true %>
+      <%= form.text_field :nombre, class: "form-control", placeholder: "Ingrese el nombre del colaborador", required: true %>
     </div>
 
     <div class="col-md-6 mb-3">
       <%= form.label :cargo_id, "Puesto / Cargo", class: "form-label" %>
       <%= form.collection_select :cargo_id, Cargo.all, :id, :nombre,
-                                 { prompt: "Seleccione un cargo" }, { class: "form-select" } %>
+                                 { prompt: "Seleccione un cargo" },
+                                 { class: "form-select", id: "empleado_cargo_id" } %>
     </div>
   </div>
 
@@ -32,14 +33,15 @@
     <div class="col-md-6 mb-3">
       <%= form.label :salario, "Salario (₲)", class: "form-label" %>
 
-      <!-- Campo mostrado -->
-      <%= text_field_tag :salario_mostrado, "",
+      <!-- Campo visible -->
+      <%= text_field_tag :salario_mostrado,
+                         empleado.salario.present? ? number_to_currency(empleado.salario, unit: "₲", precision: 0) : "",
                          class: "form-control",
                          id: "salario_mostrado",
                          placeholder: "Se completa automáticamente",
                          readonly: true %>
 
-      <!-- Campo real -->
+      <!-- Campo oculto real -->
       <%= form.hidden_field :salario, id: "empleado_salario" %>
     </div>
 
@@ -49,7 +51,7 @@
     </div>
   </div>
 
-  <!-- CHECK ACTIVO -->
+  <!-- ACTIVO -->
   <div class="form-check mb-3">
     <%= form.check_box :activo, class: "form-check-input", id: "empleado_activo" %>
     <%= form.label :activo, "Empleado Activo", class: "form-check-label fw-semibold" %>
@@ -63,18 +65,18 @@
 
 <% end %>
 
-
-
+<!-- ============================
+       JAVASCRIPT DEL SALARIO
+=============================== -->
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-        const cargoSelect = document.querySelector("#empleado_cargo_id");
+        const cargoSelect = document.getElementById("empleado_cargo_id");
+        const salarioReal = document.getElementById("empleado_salario");
+        const salarioMostrado = document.getElementById("salario_mostrado");
+
+        if (!cargoSelect) return;
 
         cargoSelect.addEventListener("change", async () => {
-            const salarioReal = document.querySelector("#empleado_salario");
-            const salarioMostrado = document.querySelector("#salario_mostrado");
-
-            if (!salarioReal || !salarioMostrado) return;
-
             const cargoId = cargoSelect.value;
 
             if (!cargoId) {
@@ -86,7 +88,6 @@
             try {
                 const response = await fetch(`/cargos/${cargoId}.json`);
                 const data = await response.json();
-
                 const valor = Number(data.salario);
 
                 salarioReal.value = valor;
@@ -98,9 +99,8 @@
                 });
 
             } catch (error) {
-                console.error(error);
+                console.error("Error cargando salario:", error);
             }
         });
     });
 </script>
-

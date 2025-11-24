@@ -1,15 +1,4 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
 Cargo.create([
-
-
                { nombre: "Decorador Principal", salario: 600000 },
                { nombre: "Ambientador", salario: 350000 },
                { nombre: "Auxiliar de decoracion", salario: 250000 },
@@ -32,6 +21,7 @@ Servicio.create([
                   { nombre: "Centros de mesa", categoria: "Decoración", costo_base: 300000 },
 
                   { nombre: "Iluminación ambiental", categoria: "Luces", costo_base: 500000 },
+
                   { nombre: "Dj Set", categoria: "Sonido", costo_base: 800000 },
                   { nombre: "Sonido para ambiente", categoria: "Sonido", costo_base: 600000 },
                   { nombre: "Parlantes - consolas - monitores", categoria: "Sonido", costo_base: 700000 },
@@ -43,5 +33,5 @@ Servicio.create([
                   { nombre: "Anfitrión / Recepcionista", categoria: "Servicio de Atención", costo_base: 250000 },
 
                   { nombre: "Animador del evento", categoria: "Animación", costo_base: 400000 },
-                  { nombre: "Animadoor infantil", categoria: "Animación", costo_base: 300000 }
+                  { nombre: "Animador infantil", categoria: "Animación", costo_base: 300000 }
                 ])

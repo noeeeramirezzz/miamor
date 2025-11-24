@@ -1,7 +1,7 @@
 class Asignacion < ApplicationRecord
-  self.table_name = "asignaciones"   # Esto le dice a Rails la tabla correcta
-  belongs_to :servicio
+  self.table_name = "asignaciones"
   belongs_to :evento
-  belongs_to :empleado
-end
 
+  has_many :asignacion_detalles, dependent: :destroy
+  accepts_nested_attributes_for :asignacion_detalles, allow_destroy: true
+end

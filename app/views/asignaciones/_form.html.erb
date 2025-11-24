@@ -1,49 +1,52 @@
 <%= form_with model: asignacion, url: form_url, local: true do |form| %>
 
+  <!-- EVENTO + ESTADO GENERAL -->
   <div class="row">
     <div class="col-md-6 mb-3">
-      <%= form.label :evento_id, "Eventooo", class: "form-label" %>
+      <%= form.label :evento_id, "Evento", class: "form-label" %>
       <%= form.collection_select :evento_id, Evento.all, :id, :nombre_evento,
                                  { include_blank: "Seleccione un evento" },
-                                 class: "form-select" %>
+                                 class: "form-select", required: true %>
     </div>
 
     <div class="col-md-6 mb-3">
-      <%= form.label :servicio_id, "Servicio", class: "form-label" %>
-      <%= form.collection_select :servicio_id, Servicio.all, :id, :nombre,
-                                 { include_blank: "Seleccione un servicio" },
-                                 class: "form-select", id: "select-servicio" %>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-6 mb-3">
-      <%= form.label :empleado_id, "Empleado", class: "form-label" %>
-      <%= form.collection_select :empleado_id, Empleado.all, :id, :nombre,
-                                 { include_blank: "Seleccione un empleado" },
-                                 class: "form-select", id: "select-empleado" %>
-    </div>
-
-    <div class="col-md-6 mb-3">
-      <%= form.label :rol, "Rol", class: "form-label" %>
-      <%= form.text_field :rol, class: "form-control", placeholder: "Ej: Coordinador" %>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-6 mb-3">
-      <%= form.label :estado, "Estado", class: "form-label" %>
+      <%= form.label :estado, "Estado General", class: "form-label" %>
       <%= form.select :estado, ["Planificada", "En Proceso", "Finalizada"],
                       { include_blank: "Seleccione un estado" },
-                      class: "form-select" %>
+                      class: "form-select", required: true %>
     </div>
   </div>
 
-  <div class="mb-3">
-    <%= form.label :tarea, "Tarea", class: "form-label" %>
-    <%= form.text_area :tarea, class: "form-control", rows: 3,
-                       placeholder: "Descripción de la tarea" %>
-  </div>
+  <h4 class="mt-4">Asignación de Servicios</h4>
+
+  <table class="table table-bordered">
+    <thead>
+    <tr>
+      <th>Servicio</th>
+      <th>Empleado</th>
+      <th>Tarea</th>
+      <th></th>
+    </tr>
+    </thead>
+
+    <tbody id="asignaciones-container">
+    <% @asignacion.asignacion_detalles.each do |detalle_item| %>
+      <%= form.fields_for :asignacion_detalles, detalle_item do |detalle| %>
+        <%= render "asignacion_fields", f: detalle %>
+      <% end %>
+    <% end %>
+    </tbody>
+
+  </table>
+
+  <%= link_to "Agregar servicio", "#", id: "add-asignacion", class: "btn btn-success" %>
+
+  <!-- TEMPLATE PARA AÑADIR FILAS -->
+  <script type="text/template" id="asignaciones_template">
+    <%= form.fields_for :asignacion_detalles, AsignacionDetalle.new, child_index: "NEW_RECORD" do |detalle| %>
+      <%= render "asignacion_fields", f: detalle %>
+    <% end %>
+  </script>
 
   <div class="mt-3">
     <%= form.submit "Guardar", class: "btn btn-primary" %>
@@ -51,3 +54,19 @@
   </div>
 
 <% end %>
+
+<script>
+    document.addEventListener("click", function(e) {
+        // Agregar nuevas filas
+        if (e.target.id === "add-asignacion") {
+            e.preventDefault();
+            const template = document.querySelector("#asignaciones_template").innerHTML;
+            document.querySelector("#asignaciones-container").insertAdjacentHTML("beforeend", template);
+        }
+
+        // Eliminar filas
+        if (e.target.classList.contains("remove_fields")) {
+            e.target.closest(".nested-fields").remove();
+        }
+    });
+</script>

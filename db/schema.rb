@@ -10,22 +10,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_23_165445) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_24_015300) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "asignacion_detalles", force: :cascade do |t|
+    t.bigint "asignacion_id", null: false
+    t.datetime "created_at", null: false
+    t.bigint "empleado_id", null: false
+    t.string "estado"
+    t.string "rol"
+    t.bigint "servicio_id", null: false
+    t.text "tarea"
+    t.datetime "updated_at", null: false
+    t.index ["asignacion_id"], name: "index_asignacion_detalles_on_asignacion_id"
+    t.index ["empleado_id"], name: "index_asignacion_detalles_on_empleado_id"
+    t.index ["servicio_id"], name: "index_asignacion_detalles_on_servicio_id"
+  end
 
   create_table "asignaciones", force: :cascade do |t|
     t.datetime "actualizado_en"
     t.datetime "creado_en"
     t.datetime "created_at", null: false
-    t.bigint "empleado_id", null: false
     t.string "estado"
     t.bigint "evento_id", null: false
-    t.string "rol"
     t.integer "servicio_id"
-    t.string "tarea"
     t.datetime "updated_at", null: false
-    t.index ["empleado_id"], name: "index_asignaciones_on_empleado_id"
     t.index ["evento_id"], name: "index_asignaciones_on_evento_id"
   end
 
@@ -130,7 +140,9 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_23_165445) do
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "asignaciones", "empleados"
+  add_foreign_key "asignacion_detalles", "asignaciones", column: "asignacion_id"
+  add_foreign_key "asignacion_detalles", "empleados"
+  add_foreign_key "asignacion_detalles", "servicios"
   add_foreign_key "asignaciones", "eventos"
   add_foreign_key "contratos", "eventos"
   add_foreign_key "detalle_contratos", "contratos"

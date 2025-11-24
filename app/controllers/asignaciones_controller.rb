@@ -1,14 +1,15 @@
 class AsignacionesController < ApplicationController
+
   # Lista de asignaciones
   def index
     @q = params[:q]
     asignaciones = if @q.present?
-                     Asignacion.joins(:evento, :empleado).where(
-                       "eventos.nombre_evento ILIKE ? OR empleados.nombre ILIKE ? OR asignaciones.estado ILIKE ?",
-                       "%#{@q}%", "%#{@q}%", "%#{@q}%"
+                     Asignacion.joins(:evento).where(
+                       "eventos.nombre_evento ILIKE ? OR asignaciones.estado ILIKE ?",
+                       "%#{@q}%", "%#{@q}%"
                      )
                    else
-                     Asignacion.all.includes(:evento, :empleado)
+                     Asignacion.all.includes(:evento)
                    end
 
     @asignaciones = asignaciones.order(:id).page(params[:page]).per(10)
@@ -17,11 +18,17 @@ class AsignacionesController < ApplicationController
   # Formulario nuevo
   def new
     @asignacion = Asignacion.new
+
+    # NECESARIO PARA QUE APAREZCA LA PRIMERA FILA EN LA TABLA
+    @asignacion.asignacion_detalles.build
   end
 
   # Formulario editar
   def edit
     @asignacion = Asignacion.find(params[:id])
+
+    # Si no tiene filas, mostrar una igual
+    @asignacion.asignacion_detalles.build if @asignacion.asignacion_detalles.empty?
   end
 
   # Crear asignación
@@ -58,12 +65,9 @@ class AsignacionesController < ApplicationController
   def asignacion_params
     params.require(:asignacion).permit(
       :evento_id,
-      :empleado_id,
-      :rol,
-      :tarea,
       :estado,
-      :creado_en,
-      :actualizado_en
+      asignacion_detalles_attributes: [:id, :servicio_id, :empleado_id, :tarea, :_destroy]
     )
   end
+
 end

@@ -24,31 +24,57 @@
     <tr>
       <th>#</th>
       <th>Evento</th>
-      <th>Empleado</th>
-      <th>Rol</th>
-      <th>Tarea</th>
-      <th>Estado</th>
+      <th>Servicios</th>
+      <th>Empleados</th>
+      <th>Tareas</th>
+      <th>Estado General</th>
       <th>Creado</th>
       <th>Actualizado</th>
       <th>Acciones</th>
     </tr>
     </thead>
+
     <tbody>
     <% @asignaciones.each_with_index do |asignacion, index| %>
       <tr>
         <td><%= index + 1 %></td>
+
+        <!-- Evento -->
         <td><%= asignacion.evento&.nombre_evento || "Sin evento" %></td>
-        <td><%= asignacion.empleado&.nombre || "Sin empleado" %></td>
-        <td><%= asignacion.rol %></td>
-        <td><%= asignacion.tarea %></td>
+
+        <!-- Servicios -->
+        <td>
+          <%= asignacion.asignacion_detalles.map { |d| d.servicio.nombre }.join(", ") %>
+        </td>
+
+        <!-- Empleados -->
+        <td>
+          <%= asignacion.asignacion_detalles.map { |d| d.empleado.nombre }.join(", ") %>
+        </td>
+
+        <!-- Tareas -->
+        <td>
+          <%= asignacion.asignacion_detalles.map(&:tarea).join(", ") %>
+        </td>
+
+        <!-- Estado general -->
         <td><%= asignacion.estado %></td>
+
         <td><%= asignacion.created_at&.strftime("%d/%m/%Y") %></td>
         <td><%= asignacion.updated_at&.strftime("%d/%m/%Y") %></td>
+
         <td class="d-flex gap-1">
-          <%= link_to edit_asignacione_path(asignacion), class: "btn btn-sm btn-outline-primary", title: "Editar" do %>
+          <%= link_to edit_asignacione_path(asignacion),
+                      class: "btn btn-sm btn-outline-primary",
+                      title: "Editar" do %>
             <i class="bi bi-pencil"></i>
           <% end %>
-          <%= button_to asignacione_path(asignacion), method: :delete, data: { confirm: "¿Está seguro?" }, class: "btn btn-sm btn-outline-danger", title: "Eliminar" do %>
+
+          <%= button_to asignacione_path(asignacion),
+                        method: :delete,
+                        data: { confirm: "¿Está seguro?" },
+                        class: "btn btn-sm btn-outline-danger",
+                        title: "Eliminar" do %>
             <i class="bi bi-trash"></i>
           <% end %>
         </td>
@@ -61,7 +87,8 @@
       </tr>
     <% end %>
     </tbody>
-  </table>
-  <%= paginate @asignaciones %>
 
+  </table>
+
+  <%= paginate @asignaciones %>
 </div>
