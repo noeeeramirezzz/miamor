@@ -1,6 +1,6 @@
 <%= form_with model: evento, url: form_url, local: true, id: "evento-form" do |form| %>
 
-    <div class="row">
+  <div class="row">
     <div class="col-md-6 mb-3">
       <%= form.label :cliente_id, "Cliente", class: "form-label" %>
       <%= form.collection_select :cliente_id, Cliente.all, :id, :nombre,
@@ -45,14 +45,16 @@
       <%= form.label :fecha_inicio, "Fecha de Inicio", class: "form-label" %>
       <%= form.datetime_local_field :fecha_inicio,
                                     class: "form-control",
-                                    required: true %>
+                                    required: true,
+                                    min: Time.now.strftime("%Y-%m-%dT%H:%M") %>
     </div>
 
     <div class="col-md-6 mb-3">
       <%= form.label :fecha_fin, "Fecha de Fin", class: "form-label" %>
       <%= form.datetime_local_field :fecha_fin,
                                     class: "form-control",
-                                    required: true %>
+                                    required: true,
+                                    min: Time.now.strftime("%Y-%m-%dT%H:%M") %>
     </div>
   </div>
 
@@ -70,6 +72,7 @@
     <%= form.submit "Guardar", class: "btn btn-primary" %>
     <%= link_to "Cancelar", eventos_path, class: "btn btn-secondary ms-2" %>
   </div>
+
 <% end %>
 
 <script>
@@ -83,12 +86,34 @@
 
             if (!inicio || !fin) return;
 
-            // 1 hora en milisegundos
             const unaHora = 60 * 60 * 1000;
+            const hoy = new Date();
+            const sieteDias = 7 * 24 * 60 * 60 * 1000;
 
+            // VALIDACIÓN 1 → Evento debe durar al menos 1 hora
             if (fin - inicio < unaHora) {
                 event.preventDefault();
                 alert("El evento debe durar mínimo 1 hora.\nLa fecha de fin debe ser al menos 1 hora mayor que la fecha de inicio.");
+                return false;
+            }
+
+            // VALIDACIÓN 2 → Evento debe crearse con 7 días de anticipación
+            if (inicio - hoy < sieteDias) {
+                event.preventDefault();
+                alert("Debe programar este evento con al menos 7 días de anticipación.");
+                return false;
+            }
+
+            // VALIDACIÓN 3 → No permitir fechas pasadas
+            if (inicio < hoy) {
+                event.preventDefault();
+                alert("La fecha de inicio no puede ser una fecha pasada.");
+                return false;
+            }
+
+            if (fin < hoy) {
+                event.preventDefault();
+                alert("La fecha de fin no puede ser una fecha pasada.");
                 return false;
             }
         });

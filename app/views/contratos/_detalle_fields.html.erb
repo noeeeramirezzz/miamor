@@ -8,19 +8,25 @@
                             class: "form-select servicio-select",
                             data: { prices: Servicio.all.map { |s| [s.id, s.costo_base] }.to_h.to_json }
     %>
-
   </td>
 
   <td>
-    <%= f.number_field :cantidad, class: "form-control cantidad-input", min: 1, value: 1 %>
+    <%= f.number_field :cantidad,
+                       class: "form-control cantidad-input",
+                       min: 1,
+                       value: f.object.cantidad || 1 %>
   </td>
 
   <td>
-    <%= f.number_field :precio_unitario, class: "form-control precio-input", step: 0.01 %>
+    <%= f.number_field :precio_unitario,
+                       class: "form-control precio-input",
+                       step: 0.01 %>
   </td>
 
   <td>
-    <%= f.number_field :subtotal, class: "form-control subtotal-input", readonly: true %>
+    <%= f.number_field :subtotal,
+                       class: "form-control subtotal-input",
+                       readonly: true %>
   </td>
 
   <td>

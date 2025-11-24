@@ -9,31 +9,35 @@
     <div class="col-md-6 mb-3">
       <%= form.label :evento_id, "Evento", class: "form-label" %>
       <%= form.collection_select :evento_id, Evento.all, :id, :nombre_evento,
-                                 { prompt: "Seleccione un evento" }, class: "form-select" %>
+                                 { prompt: "Seleccione un evento" },
+                                 class: "form-select",
+                                 id: "contrato_evento_id" %>
     </div>
   </div>
-
 
   <div class="row">
     <div class="col-md-6 mb-3">
       <%= form.label :fecha_contrato, "Fecha del Contrato", class: "form-label" %>
-      <%= form.datetime_local_field :fecha_contrato, class: "form-control" %>
+      <%= form.datetime_local_field :fecha_contrato,
+                                    class: "form-control",
+                                    id: "contrato_fecha_contrato" %>
     </div>
 
     <div class="col-md-6 mb-3">
       <%= form.label :monto_total, "Monto Total (₲)", class: "form-label" %>
-      <%= form.number_field :monto_total, id: "contrato_monto_total",
-                            class: "form-control", readonly: true %>
+      <%= form.number_field :monto_total,
+                            id: "contrato_monto_total",
+                            class: "form-control",
+                            readonly: true %>
     </div>
   </div>
-
 
   <div class="mb-3">
     <%= form.label :estado, "Estado", class: "form-label" %>
     <%= form.select :estado, ["Activo", "Cancelado", "Finalizado"],
-                    { prompt: "Seleccione un estado" }, class: "form-select" %>
+                    { prompt: "Seleccione un estado" },
+                    class: "form-select" %>
   </div>
-
 
   <h4>Detalle del Contrato</h4>
 
@@ -58,14 +62,12 @@
 
   <%= link_to "Agregar servicio", "#", id: "add-detalle", class: "btn btn-success" %>
 
-
-  <!-- TEMPLATE CORREGIDO PARA CLONAR -->
+  <!-- TEMPLATE PARA NUEVAS FILAS -->
   <script type="text/template" id="detalle_template">
     <%= form.fields_for :detalle_contratos, DetalleContrato.new, child_index: "NEW_RECORD" do |detalle| %>
       <%= render "detalle_fields", f: detalle %>
     <% end %>
   </script>
-
 
   <div class="mt-3">
     <%= form.submit "Guardar", class: "btn btn-primary" %>
@@ -73,3 +75,144 @@
   </div>
 
 <% end %>
+
+<!-- CARGAR FECHA AUTOMÁTICAMENTE SEGÚN EVENTO -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const eventoSelect = document.getElementById("contrato_evento_id");
+        const fechaContratoInput = document.getElementById("contrato_fecha_contrato");
+
+        if (!eventoSelect || !fechaContratoInput) return;
+
+        eventoSelect.addEventListener("change", async () => {
+            const eventoId = eventoSelect.value;
+            if (!eventoId) return;
+
+            try {
+                const response = await fetch(`/eventos/${eventoId}.json`);
+                const data = await response.json();
+
+                if (data.fecha_inicio) {
+                    const date = new Date(data.fecha_inicio);
+                    const localISO = new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+                        .toISOString()
+                        .slice(0, 16);
+
+                    fechaContratoInput.value = localISO;
+                }
+            } catch (error) {
+                console.error("Error obteniendo fecha del evento:", error);
+            }
+        });
+    });
+</script>
+
+<!-- SISTEMA COMPLETO DE PRECIOS + SUBTOTALES + TOTAL + AGREGAR FILA -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+        const botonAgregar = document.getElementById("add-detalle");
+        const container = document.getElementById("detalle-container");
+        const template = document.getElementById("detalle_template").innerHTML;
+
+        botonAgregar.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            let nuevoId = new Date().getTime();
+            let nuevaFila = template.replace(/NEW_RECORD/g, nuevoId);
+
+            container.insertAdjacentHTML("beforeend", nuevaFila);
+
+            attachEvents();
+        });
+
+        function attachEvents() {
+
+            document.querySelectorAll(".servicio-select").forEach(select => {
+                select.onchange = function () {
+                    let row = this.closest("tr");
+
+                    let prices = JSON.parse(this.dataset.prices);
+                    let precio = prices[this.value] || 0;
+
+                    row.querySelector(".precio-input").value = parseInt(precio);
+
+
+                    let cantidad = parseFloat(row.querySelector(".cantidad-input").value) || 1;
+                    row.querySelector(".subtotal-input").value = parseInt(precio) * cantidad;
+
+
+                    recalcularTotal();
+                };
+            });
+
+            document.querySelectorAll(".cantidad-input, .precio-input").forEach(input => {
+                input.oninput = function () {
+                    let row = this.closest("tr");
+
+                    let cantidad = parseInt(row.querySelector(".cantidad-input").value) || 1;
+                    let precio = parseInt(row.querySelector(".precio-input").value) || 0;
+
+                    row.querySelector(".subtotal-input").value = cantidad * precio;
+
+                    recalcularTotal();
+                };
+            });
+
+            document.querySelectorAll(".remove_fields").forEach(btn => {
+                btn.onclick = function () {
+                    this.closest("tr").remove();
+                    recalcularTotal();
+                };
+            });
+        }
+
+        function recalcularTotal() {
+            let total = 0;
+
+            document.querySelectorAll(".subtotal-input").forEach(sub => {
+                total += parseInt(sub.value) || 0;
+            });
+
+            let totalField = document.getElementById("contrato_monto_total");
+            if (totalField) totalField.value = total;
+        }
+
+        attachEvents();
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+        document.querySelector("form").addEventListener("submit", function (e) {
+
+            const numero = document.getElementById("contrato_numero_contrato").value;
+
+            // VALIDAR QUE SOLO TENGA NÚMEROS
+            if (!/^[0-9]+$/.test(numero)) {
+                e.preventDefault();
+                alert("El número de contrato solo puede contener números.");
+                return false;
+            }
+
+            // VALIDAR QUE NO HAYA CAMPOS VACÍOS EN LOS DETALLES
+            let valido = true;
+
+            document.querySelectorAll("#detalle-container tr").forEach(row => {
+                let servicio = row.querySelector(".servicio-select").value;
+                let cantidad = row.querySelector(".cantidad-input").value;
+                let precio = row.querySelector(".precio-input").value;
+
+                if (!servicio || !cantidad || !precio) {
+                    valido = false;
+                }
+            });
+
+            if (!valido) {
+                e.preventDefault();
+                alert("Debes completar todos los campos de cada servicio.\n(Notas puede quedar vacío)");
+                return false;
+            }
+        });
+    });
+</script>
