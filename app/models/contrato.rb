@@ -24,6 +24,7 @@ class Contrato < ApplicationRecord
 
   private
 
+
   def debe_tener_detalles
     if detalle_contratos.reject(&:marked_for_destruction?).empty?
       errors.add(:base, "Debe agregar al menos un servicio al contrato.")

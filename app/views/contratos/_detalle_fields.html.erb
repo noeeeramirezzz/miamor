@@ -4,7 +4,7 @@
                             Servicio.all,
                             :id,
                             :nombre,
-                            { prompt: "Seleccione" },
+                            { prompt: "Selecciona" },
                             class: "form-select servicio-select",
                             data: { prices: Servicio.all.map { |s| [s.id, s.costo_base] }.to_h.to_json }
     %>

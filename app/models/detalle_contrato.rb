@@ -12,3 +12,4 @@ class DetalleContrato < ApplicationRecord
   validates :precio_unitario, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :subtotal, presence: true
 end
+

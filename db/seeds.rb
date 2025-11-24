@@ -43,5 +43,5 @@ Servicio.create([
                   { nombre: "Anfitrión / Recepcionista", categoria: "Servicio de Atención", costo_base: 250000 },
 
                   { nombre: "Animador del evento", categoria: "Animación", costo_base: 400000 },
-                  { nombre: "Animador infantil", categoria: "Animación", costo_base: 300000 }
+                  { nombre: "Animadoor infantil", categoria: "Animación", costo_base: 300000 }
                 ])
